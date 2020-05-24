@@ -59,7 +59,7 @@ module.exports = function (schema, options) {
         }
         schemata[key] = $schema;
     });
-    schema.post('validate', function (data, next) {
+    schema.pre('save', function (data, next) {
         // APPLY THE OVERALL DOCUMENT SCHEMA
         if (SCHEMA && !SCHEMA(data)) {
             var error = new ValidationError(data);
