@@ -68,6 +68,8 @@ module.exports = function (schema, options) {
             error.message += JSON.stringify(SCHEMA.errors.map(function (x) { return "'" + x.schemaPath + "' " + x.message; }));
             error.errors.record = new ValidatorError('record', 'Overall object does not match JSON-schema', 'notvalid', data);
             error.errors.record.errors = SCHEMA.errors;
+
+            console.log('ERROR', error)
             throw error;
         }
     
@@ -86,6 +88,8 @@ module.exports = function (schema, options) {
                 error.message += JSON.stringify($schema.errors.map(function (x) { return "'" + x.schemaPath + "' " + x.message; }));
                 error.errors[key] = new ValidatorError(key, key + ' does not match JSON-schema', 'notvalid', data);
                 error.errors[key].errors = schemata[key].errors;
+
+                console.log('ERROR', error)
                 throw error
             }
         }
