@@ -68,31 +68,26 @@ module.exports = function (schema, options) {
             error.message += JSON.stringify(SCHEMA.errors.map(function (x) { return "'" + x.schemaPath + "' " + x.message; }));
             error.errors.record = new ValidatorError('record', 'Overall object does not match JSON-schema', 'notvalid', data);
             error.errors.record.errors = SCHEMA.errors;
-            return next(error);
+            throw error;
         }
-        try {
-            // APPLY THE ATTRIBUTE SCHEMA
-            var $schema;
-            for (var key in schemata) {
-                if (data[key] === undefined) {
-                    // use the Mongoose `required` validator for validating the presence of the attribute
-                    continue;
-                }
-                console.log("validating schema path", key);
-                $schema = schemata[key];
-                if (!$schema(data[key])) {
-                    var error = new ValidationError(data);
-                    error.message += "; '" + key + "' attribute does not match it's JSON-schema: ";
-                    error.message += JSON.stringify($schema.errors.map(function (x) { return "'" + x.schemaPath + "' " + x.message; }));
-                    error.errors[key] = new ValidatorError(key, key + ' does not match JSON-schema', 'notvalid', data);
-                    error.errors[key].errors = schemata[key].errors;
-                    return next(error);
-                }
+    
+        // APPLY THE ATTRIBUTE SCHEMA
+        var $schema;
+        for (var key in schemata) {
+            if (data[key] === undefined) {
+                // use the Mongoose `required` validator for validating the presence of the attribute
+                continue;
             }
-            return next();
-        }
-        catch (err) {
-            return next(err);
+            console.log("validating schema path", key);
+            $schema = schemata[key];
+            if (!$schema(data[key])) {
+                var error = new ValidationError(data);
+                error.message += "; '" + key + "' attribute does not match it's JSON-schema: ";
+                error.message += JSON.stringify($schema.errors.map(function (x) { return "'" + x.schemaPath + "' " + x.message; }));
+                error.errors[key] = new ValidatorError(key, key + ' does not match JSON-schema', 'notvalid', data);
+                error.errors[key].errors = schemata[key].errors;
+                throw error
+            }
         }
     });
 };

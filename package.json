@@ -1,6 +1,6 @@
 {
   "name": "mongoose-ajv-plugin",
-  "version": "2.0.1",
+  "version": "2.1.1",
   "description": "AJV plugin for Mongoose",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "ajv": "6.9.1",
-    "mongoose": "5.9.15",
+    "mongoose": "5.12.4",
     "semver": "^5.3.0"
   },
   "devDependencies": {
